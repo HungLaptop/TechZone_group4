@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <style>
+        /* Override layout-wrapper for profile page */
+        .layout-wrapper {
+            display: block !important;
+            max-width: 900px !important;
+            margin: 2rem auto !important;
+            padding: 0 1rem !important;
+        }
+        .profile-section {
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--clr-primary);
+            box-shadow: 0 0 0 3px rgba(14, 78, 241, 0.1);
+        }
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: var(--clr-primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0c3ec7;
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h2 style="margin-bottom: 1.5rem; text-align: center;">Thông tin tài khoản</h2>
+
+    <!-- Success/Error Messages -->
+    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <!-- Profile Information Card -->
+    <div class="card profile-section" style="margin: 0 auto;">
+        <div class="card-header bg-primary text-white" style="background: var(--clr-primary) !important; color: white !important; padding: 1rem; border-radius: 14px 14px 0 0;">
+            <h5 style="margin: 0; font-size: 1.2rem; text-align: center;">Thông tin cơ bản</h5>
+        </div>
+        <div class="card-body" style="padding: 1.5rem;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 1rem 0; width: 30%; font-weight: 600;">Username:</td>
+                    <td style="padding: 1rem 0;" th:text="${user.username}">username</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 1rem 0; width: 30%; font-weight: 600;">Email:</td>
+                    <td style="padding: 1rem 0;" th:text="${user.email}">email@example.com</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 1rem 0; width: 30%; font-weight: 600;">User ID:</td>
+                    <td style="padding: 1rem 0;" th:text="${user.id}">1</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 1rem 0; width: 30%; font-weight: 600;">Trạng thái:</td>
+                    <td style="padding: 1rem 0;">
+                        <span th:if="${user.enabled}" class="badge bg-success" style="background: #10b981 !important; color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem;">Đang hoạt động</span>
+                        <span th:unless="${user.enabled}" class="badge bg-danger" style="background: #ef4444 !important; color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem;">Bị khóa</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 1rem 0; width: 30%; font-weight: 600;">Vai trò:</td>
+                    <td style="padding: 1rem 0;">
+                        <span th:each="role : ${user.roles}" class="badge bg-info me-1" style="background: #3b82f6 !important; color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem; margin-right: 0.5rem;" th:text="${role.name}">ROLE</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Update Email Card -->
+    <div class="card profile-section" style="margin: 0 auto;">
+        <div class="card-header bg-primary text-white" style="background: var(--clr-primary) !important; color: white !important; padding: 1rem; border-radius: 14px 14px 0 0;">
+            <h5 style="margin: 0; font-size: 1.2rem; text-align: center;">Cập nhật Email</h5>
+        </div>
+        <div class="card-body" style="padding: 1.5rem;">
+            <form method="post" th:action="@{/profile/update-email}">
+                <div class="form-group">
+                    <label for="newEmail" class="form-label">Email mới:</label>
+                    <input type="email" class="form-control" id="newEmail" name="newEmail"
+                           th:value="${user.email}" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Cập nhật Email</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Password Card -->
+    <div class="card profile-section" style="margin: 0 auto;">
+        <div class="card-header bg-primary text-white" style="background: var(--clr-primary) !important; color: white !important; padding: 1rem; border-radius: 14px 14px 0 0;">
+            <h5 style="margin: 0; font-size: 1.2rem; text-align: center;">Đổi mật khẩu</h5>
+        </div>
+        <div class="card-body" style="padding: 1.5rem;">
+            <form method="post" th:action="@{/profile/change-password}">
+                <div class="form-group">
+                    <label for="oldPassword" class="form-label">Mật khẩu hiện tại:</label>
+                    <input type="password" class="form-control" id="oldPassword" name="oldPassword" required />
+                </div>
+                <div class="form-group">
+                    <label for="newPassword" class="form-label">Mật khẩu mới:</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword"
+                           minlength="6" required />
+                    <small style="color: var(--clr-muted); font-size: 0.85rem;">Tối thiểu 6 ký tự</small>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới:</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                           minlength="6" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+        <a href="/" class="btn btn-secondary">Quay lại trang chủ</a>
+        <a href="/customer/dashboard" class="btn btn-primary" th:if="${isCustomer}">Trang Customer</a>
+        <a href="/staff/dashboard" class="btn btn-primary" th:if="${isStaff or isAdmin}">Trang Staff</a>
+        <a href="/admin/dashboard" class="btn btn-primary" th:if="${isAdmin}">Trang Admin</a>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+

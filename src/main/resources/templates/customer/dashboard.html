@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<body>
+<div layout:fragment="content" class="main-layout container-xl">
+    <div class="card">
+        <h1>Welcome, Customer</h1>
+        <p>Xin chào, bạn có thể khám phá danh sách sản phẩm, thêm vào giỏ hàng, xem thông tin cửa hàng và nhận ưu đãi nhanh.</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>Catalog</h3>
+            <p>Truy cập nhanh tất cả danh mục, thương hiệu và nhà cung cấp.</p>
+            <a class="btn btn-primary" href="/customer/products">Xem sản phẩm</a>
+        </div>
+        <div class="card">
+            <h3>About us</h3>
+            <p>Giới thiệu, chính sách và tiện ích dịch vụ 2026.</p>
+            <a class="btn btn-primary" href="/about">Xem thêm</a>
+        </div>
+        <div class="card">
+            <h3>Your Cart</h3>
+            <p>Đang chờ xử lý (demo): giỏ hàng, kiểm tra nhanh, thanh toán 1 bước.</p>
+            <span class="status-chip">Empty</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

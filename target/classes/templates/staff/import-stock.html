@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<body>
+<div layout:fragment="content" class="container">
+    <h2>Nhập kho</h2>
+    <form method="post" action="/staff/import-stock" class="row g-3 mb-3">
+        <div class="col-4"><input type="number" name="productId" class="form-control" placeholder="Product ID" required/></div>
+        <div class="col-4"><input type="number" name="quantity" class="form-control" placeholder="Số lượng" required/></div>
+        <div class="col-4"><button class="btn btn-primary">Nhập</button></div>
+    </form>
+
+    <h3>Lịch sử nhập</h3>
+    <table class="table">
+        <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Nhân viên</th><th>Thời gian</th></tr></thead>
+        <tbody>
+        <tr th:each="entry : ${history}">
+            <td th:text="${entry.product.name}"></td>
+            <td th:text="${entry.quantity}"></td>
+            <td th:text="${entry.staff.username}"></td>
+            <td th:text="${entry.importedAt}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

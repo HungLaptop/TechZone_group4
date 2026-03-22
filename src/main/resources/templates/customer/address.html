@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<body>
+<div layout:fragment="content" class="container">
+    <h2>Địa chỉ giao hàng</h2>
+    <table class="table">
+        <thead><tr><th>Địa chỉ</th><th>Thành phố</th><th>Quận</th><th>Mã bưu chính</th><th>Default</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="address : ${addresses}">
+            <td th:text="${address.street}"></td>
+            <td th:text="${address.city}"></td>
+            <td th:text="${address.province}"></td>
+            <td th:text="${address.postalCode}"></td>
+            <td><span th:text="${address.default}? 'X':' '"/></td>
+            <td>
+                <form method="post" action="/customer/address/default"><input type="hidden" name="id" th:value="${address.id}"/><button class="btn btn-sm">Chọn mặc định</button></form>
+                <form method="post" action="/customer/address/delete" style="display:inline"><input type="hidden" name="id" th:value="${address.id}"/><button class="btn btn-danger btn-sm">Xóa</button></form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Thêm / Cập nhật</h3>
+    <form method="post" action="/customer/address/add" class="row g-3">
+        <div class="col-6"><input name="street" class="form-control" placeholder="Địa chỉ" required/></div>
+        <div class="col-2"><input name="city" class="form-control" placeholder="Thành phố" required/></div>
+        <div class="col-2"><input name="province" class="form-control" placeholder="Quận" required/></div>
+        <div class="col-2"><input name="postalCode" class="form-control" placeholder="Mã bưu chính" required/></div>
+        <div class="col-12"><label><input type="checkbox" name="default"/> Đặt làm địa chỉ mặc định</label></div>
+        <div class="col-12"><button class="btn btn-primary">Lưu địa chỉ</button></div>
+    </form>
+</div>
+</body>
+</html>

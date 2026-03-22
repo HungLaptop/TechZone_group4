@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <style>
+        /* Override layout-wrapper for login page */
+        .layout-wrapper {
+            display: block !important;
+            max-width: 500px !important;
+            margin: 2rem auto !important;
+            padding: 0 1rem !important;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--clr-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--clr-primary);
+            box-shadow: 0 0 0 3px rgba(14, 78, 241, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--clr-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0c3ec7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 78, 241, 0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--clr-primary);
+            border: 2px solid var(--clr-primary);
+            padding: 0.5rem 1rem;
+            width: auto;
+        }
+
+        .btn-outline:hover {
+            background: var(--clr-primary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+            margin-top: 1rem;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            color: var(--clr-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h2 style="margin-bottom: 1.5rem; text-align: center;">Đăng nhập</h2>
+
+    <!-- Success/Error Messages -->
+    <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <div class="alert alert-danger" th:if="${param.error}">Sai username hoặc mật khẩu.</div>
+    <div class="alert alert-info" th:if="${param.logout}">Bạn đã đăng xuất thành công.</div>
+
+    <!-- Login Card -->
+    <div class="card">
+        <div class="card-header bg-primary text-white" style="background: var(--clr-primary) !important; color: white !important; padding: 1rem; border-radius: 14px 14px 0 0;">
+            <h5 style="margin: 0; font-size: 1.2rem; text-align: center;">Đăng nhập TechZone</h5>
+        </div>
+        <div class="card-body" style="padding: 2rem;">
+            <form id="loginForm" method="post" action="/perform_login">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username"
+                           placeholder="Nhập username" required />
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                           placeholder="Nhập mật khẩu" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng nhập</button>
+            </form>
+
+            <div class="divider">
+                <span>hoặc</span>
+            </div>
+
+            <a class="btn btn-danger" href="/oauth2/authorization/google">
+                🔐 Đăng nhập với Google
+            </a>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <span style="color: var(--clr-muted);">Chưa có tài khoản?</span>
+                <a href="/register" style="color: var(--clr-primary); font-weight: 600; margin-left: 0.5rem;">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

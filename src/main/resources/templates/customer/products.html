@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<body>
+<section layout:fragment="content" class="container-fluid shop-page">
+    <div class="shop-topbar">
+        <div>
+            <h1>Kho thiết bị gia dụng</h1>
+            <p>Chọn mua nhanh điện máy, phụ kiện, đồ bếp với giá tốt và giao 24h.</p>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn btn-outline" onclick="toggleFilterDrawer()">Bộ lọc</button>
+            <button class="btn btn-outline" id="themeToggle" onclick="toggleTheme()">Dark theme</button>
+        </div>
+    </div>
+
+    <div class="shop-container">
+        <aside class="shop-sidebar" id="filterDrawer">
+            <div class="filter-header">
+                <h3>Bộ lọc</h3>
+                <button class="btn-clear" onclick="toggleFilterDrawer()">⇦</button>
+            </div>
+            <div class="filter-block">
+                <h4>Danh mục</h4>
+                <div th:each="category : ${categories}" class="filter-option">
+                    <label><input type="checkbox"/> <span th:text="${category.name}"></span></label>
+                </div>
+            </div>
+            <div class="filter-block">
+                <h4>Thương hiệu</h4>
+                <div th:each="brand : ${brands}" class="filter-option">
+                    <label><input type="checkbox"/> <span th:text="${brand.name}"></span></label>
+                </div>
+            </div>
+            <div class="filter-block">
+                <h4>Mức giá</h4>
+                <input type="range" min="500000" max="50000000" value="15000000" id="priceRange" oninput="updatePriceLabel(this.value)"/>
+                <div class="price-value">Dưới <span id="priceLabel">15.000.000</span>₫</div>
+            </div>
+        </aside>
+
+        <main class="shop-products">
+            <div class="product-grid">
+                <article class="product-card" th:each="product : ${products}">
+                    <div class="card-top">
+                        <div class="badges">
+                            <span class="badge badge-new" th:if="${product.stock} > 30">NEW</span>
+                            <span class="badge badge-hot" th:if="${product.stock} <= 30">HOT</span>
+                        </div>
+                        <img src="/images/product-default.png" alt="product image" class="product-img"/>
+                    </div>
+                    <div class="card-body">
+                        <p class="brand" th:text="${product.brand.name}"></p>
+                        <h3 th:text="${product.name}"></h3>
+                        <p class="desc" th:text="${product.description}"></p>
+                        <div class="price-row">
+                            <span class="price-current" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></span>
+                            <span class="price-old" th:text="${#numbers.formatDecimal(product.price * 1.15, 0, 'COMMA', 0, 'POINT')} + '₫'"></span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="rating">4.7 ★</span>
+                            <span class="stock" th:text="${product.stock > 10 ? 'Còn hàng' : (product.stock > 0 ? 'Sắp hết' : 'Hết hàng')}"></span>
+                            <span class="supplier" th:text="${product.supplier.name}"></span>
+                        </div>
+                        <div class="actions-row">
+                            <button class="btn btn-primary">Thêm giỏ</button>
+                            <a th:href="@{/customer/products/{id}(id=${product.id})}" class="btn btn-outline">Xem chi tiết</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <aside class="sticky-cart">
+            <div class="cart-title">Giỏ hàng</div>
+            <div class="cart-items" id="cartItems">Chưa có sản phẩm</div>
+            <div class="cart-footer">
+                <span>Tổng tiền: <strong id="cartTotal">0₫</strong></span>
+                <button class="btn btn-primary btn-block">Thanh toán</button>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<script>
+function toggleFilterDrawer() {
+    document.getElementById('filterDrawer').classList.toggle('open');
+}
+function updatePriceLabel(v) {
+    document.getElementById('priceLabel').textContent = Number(v).toLocaleString('vi-VN');
+}
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    var btn = document.getElementById('themeToggle');
+    btn.textContent = document.body.classList.contains('dark-theme') ? 'Light theme' : 'Dark theme';
+}
+</script>
+</body>
+</html>
