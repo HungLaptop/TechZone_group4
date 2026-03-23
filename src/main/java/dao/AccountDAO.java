@@ -95,4 +95,47 @@ public class AccountDAO {
 
         return false;
     }
+
+    public void updateProfile(int id, String name, String email) {
+        String sql = "UPDATE Accounts SET FullName=?, Email=? WHERE AccountID=?";
+        try ( Connection conn = new DBContext().getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkPassword(String email, String password) {
+        String sql = "SELECT * FROM Accounts WHERE Email=? AND Password=?";
+        try ( Connection conn = new DBContext().getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void changePassword(int id, String newPass) {
+        String sql = "UPDATE Accounts SET Password=? WHERE AccountID=?";
+        try ( Connection conn = new DBContext().getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPass);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -5,7 +5,6 @@
 package controller;
 
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.*;
@@ -18,6 +17,7 @@ import model.CartItem;
  */
 public class UpdateCartServlet extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -25,13 +25,24 @@ public class UpdateCartServlet extends HttpServlet {
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
         HttpSession session = request.getSession();
-        Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
-        if (cart != null && cart.containsKey(id)) {
-            if (quantity <= 0) {
-                cart.remove(id);
-            } else {
-                cart.put(id, quantity);
+        if (cart != null) {
+
+            Iterator<CartItem> iterator = cart.iterator();
+
+            while (iterator.hasNext()) {
+                CartItem item = iterator.next();
+
+                if (item.getId() == id) {
+
+                    if (quantity <= 0) {
+                        iterator.remove(); // remove item
+                    } else {
+                        item.setQuantity(quantity); // update
+                    }
+                    break;
+                }
             }
         }
 

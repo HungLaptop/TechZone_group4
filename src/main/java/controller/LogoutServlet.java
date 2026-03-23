@@ -18,7 +18,9 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author Dang Vinh Hung - CE170162
  */
+
 public class LogoutServlet extends HttpServlet {
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 

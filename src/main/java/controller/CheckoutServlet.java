@@ -2,12 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
-import dao.ProductDAO;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
@@ -23,34 +20,63 @@ import util.DBContext;
  */
 public class CheckoutServlet extends HttpServlet {
 
+    // 🔥 1. HIỂN THỊ TRANG CHECKOUT
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
 
-        // 🔹 lấy cart
-        Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
+        Account acc = (Account) session.getAttribute("account");
+        if (acc == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
         if (cart == null || cart.isEmpty()) {
             response.sendRedirect("cart");
             return;
         }
 
-        try (Connection conn = new DBContext().getConnection()) {
+        // 👉 chỉ hiển thị page thôi (KHÔNG insert DB nữa)
+        request.getRequestDispatcher("checkout.jsp").forward(request, response);
+    }
+
+    // 🔥 2. XỬ LÝ ĐẶT HÀNG
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+
+        Account acc = (Account) session.getAttribute("account");
+        if (acc == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
+        if (cart == null || cart.isEmpty()) {
+            response.sendRedirect("cart");
+            return;
+        }
+
+        try ( Connection conn = new DBContext().getConnection()) {
 
             // 🔥 1. Tính total
-            ProductDAO dao = new ProductDAO();
             double total = 0;
-
-            for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
-                total += dao.getById(entry.getKey()).getPrice() * entry.getValue();
+            for (CartItem item : cart) {
+                total += item.getPrice() * item.getQuantity();
             }
 
             // 🔥 2. Insert Orders
             String sqlOrder = "INSERT INTO Orders (AccountID, Total) VALUES (?, ?)";
-            PreparedStatement psOrder = conn.prepareStatement(sqlOrder, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement psOrder = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS);
 
-            psOrder.setInt(1, 1); // 👉 tạm hardcode user
+            psOrder.setInt(1, acc.getAccountID());
             psOrder.setDouble(2, total);
             psOrder.executeUpdate();
 
@@ -61,23 +87,19 @@ public class CheckoutServlet extends HttpServlet {
                 orderId = rs.getInt(1);
             }
 
-            // 🔥 4. Insert OrderItems
-            String sqlItem = "INSERT INTO OrderItems (OrderID, ProductID, Quantity, Price) VALUES (?, ?, ?, ?)";
+            // 🔥 4. Insert OrderDetails
+            String sqlDetail = "INSERT INTO OrderDetails (OrderID, ProductID, Quantity, Price) VALUES (?, ?, ?, ?)";
 
-            for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
+            for (CartItem item : cart) {
 
-                PreparedStatement psItem = conn.prepareStatement(sqlItem);
+                PreparedStatement ps = conn.prepareStatement(sqlDetail);
 
-                int productId = entry.getKey();
-                int quantity = entry.getValue();
-                double price = dao.getById(productId).getPrice();
+                ps.setInt(1, orderId);
+                ps.setInt(2, item.getId());
+                ps.setInt(3, item.getQuantity());
+                ps.setDouble(4, item.getPrice());
 
-                psItem.setInt(1, orderId);
-                psItem.setInt(2, productId);
-                psItem.setInt(3, quantity);
-                psItem.setDouble(4, price);
-
-                psItem.executeUpdate();
+                ps.executeUpdate();
             }
 
             // 🔥 5. Clear cart
@@ -87,7 +109,7 @@ public class CheckoutServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // 🔥 6. Redirect success
-        response.sendRedirect("order-success");
+        // 🔥 6. Redirect orders
+        response.sendRedirect("orders");
     }
 }

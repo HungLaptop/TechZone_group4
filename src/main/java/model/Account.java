@@ -9,13 +9,15 @@ package model;
  * @author Dang Vinh Hung - CE170162
  */
 public class Account {
+
     private int accountID;
     private String email;
     private String fullName;
     private String passwordHash;
     private String role;
 
-    public Account() {}
+    public Account() {
+    }
 
     public Account(int accountID, String email, String fullName, String passwordHash, String role) {
         this.accountID = accountID;
@@ -25,11 +27,32 @@ public class Account {
         this.role = role;
     }
 
-    public int getAccountID() { return accountID; }
-    public String getEmail() { return email; }
-    public String getFullName() { return fullName; }
-    public String getPasswordHash() { return passwordHash; }
-    public String getRole() { return role; }
+    public int getAccountID() {
+        return accountID;
+    }
 
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
 }
