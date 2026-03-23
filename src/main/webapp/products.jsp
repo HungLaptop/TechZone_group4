@@ -11,24 +11,28 @@
 <html>
     <head>
         <title>Shop</title>
-
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- 🔥 BONUS UI -->
+        <style>
+            .card:hover {
+                transform: scale(1.03);
+                transition: 0.3s;
+            }
+        </style>
     </head>
     <body>
 
         <jsp:include page="navbar.jsp"/>
 
         <div class="container mt-4">
-
             <div class="row">
 
                 <!-- SIDEBAR -->
                 <div class="col-md-3">
 
-                    <!-- CATEGORY -->
                     <div class="card p-3 shadow-sm mb-3">
                         <h5>Categories</h5>
-
                         <a href="products" class="d-block">All Products</a>
                         <a href="products?category=phone" class="d-block">Smartphones</a>
                         <a href="products?category=laptop" class="d-block">Laptops</a>
@@ -36,10 +40,8 @@
                         <a href="products?category=accessory" class="d-block">Accessories</a>
                     </div>
 
-                    <!-- PRICE FILTER -->
                     <div class="card p-3 shadow-sm">
                         <h5>Price Filter</h5>
-
                         <a href="products?price=1" class="d-block">Below 5,000,000 VND</a>
                         <a href="products?price=2" class="d-block">5,000,000 - 10,000,000 VND</a>
                         <a href="products?price=3" class="d-block">10,000,000 - 20,000,000 VND</a>
@@ -50,7 +52,6 @@
 
                 <!-- PRODUCT LIST -->
                 <div class="col-md-9">
-
                     <div class="row">
 
                         <%
@@ -67,14 +68,14 @@
 
                                 <div class="card-body text-center">
 
-                                    <!-- NAME -->
                                     <h6><%= p.getName() %></h6>
 
-                                    <!-- PRICE -->
-                                    <p class="text-danger fw-bold"><%= p.getPrice() %> VND</p>
+                                    <p class="text-danger fw-bold">
+                                        <%= p.getPrice() %> VND
+                                    </p>
 
-                                    <!-- ADD TO CART -->
-                                    <a href="cart?id=<%= p.getId() %>&name=<%= p.getName() %>&price=<%= p.getPrice() %>"
+                                    <!-- 🔥 ADD TO CART (FIX CHUẨN) -->
+                                    <a href="${pageContext.request.contextPath}/cart?id=<%= p.getId() %>"
                                        class="btn btn-success btn-sm">
                                         Add to Cart
                                     </a>
@@ -89,7 +90,6 @@
                             } else {
                         %>
 
-                        <!-- NO PRODUCT -->
                         <div class="col-12">
                             <div class="alert alert-warning text-center">
                                 No products found.
@@ -101,11 +101,9 @@
                         %>
 
                     </div>
-
                 </div>
 
             </div>
-
         </div>
 
     </body>

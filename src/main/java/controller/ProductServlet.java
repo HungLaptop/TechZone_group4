@@ -2,13 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
 import dao.ProductDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,18 +31,11 @@ public class ProductServlet extends HttpServlet {
 
         List<Product> list;
 
-        // 🔍 SEARCH
         if (search != null && !search.trim().isEmpty()) {
             list = dao.search(search);
-        }
-
-        // 📂 CATEGORY
-        else if (category != null && !category.isEmpty()) {
+        } else if (category != null && !category.isEmpty()) {
             list = dao.filterByCategory(category);
-        }
-
-        // 💰 PRICE FILTER
-        else if (price != null) {
+        } else if (price != null) {
 
             switch (price) {
                 case "1":
@@ -62,14 +53,20 @@ public class ProductServlet extends HttpServlet {
                 default:
                     list = dao.getAll();
             }
-        }
 
-        // 📦 DEFAULT
-        else {
+        } else {
             list = dao.getAll();
         }
 
         request.setAttribute("list", list);
-        request.getRequestDispatcher("products.jsp").forward(request, response);
+
+        // 🔥 FIX QUAN TRỌNG
+        String uri = request.getRequestURI();
+
+        if (uri.contains("products")) {
+            request.getRequestDispatcher("products.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
     }
 }
